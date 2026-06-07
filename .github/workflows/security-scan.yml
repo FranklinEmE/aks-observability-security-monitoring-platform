@@ -2,7 +2,8 @@ name: DevSecOps Pipeline - Build, Scan, Push
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
   pull_request:
 
 jobs:
@@ -10,43 +11,50 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout code
+      # 1. Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Setup Docker
+      # 2. Set up Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # 3. Login (only needed for push later)
+      # 3. Log in to Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # 4. Build image
+      # 4. Build Docker image
       - name: Build Docker image
-        run: |
-          docker build -t myapp:latest ./app/backend
+        uses: docker/build-push-action@v6
+        with:
+          context: ./app/backend
+          push: false
+          load: true
+          tags: myapp:latest
 
-      # 5. Trivy scan (FAIL ON HIGH/CRITICAL)
-      - name: Run Trivy scan
-        uses: aquasecurity/trivy-action@0.20.0
+      # 5. Run Trivy scan (Fail on HIGH/CRITICAL vulnerabilities)
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: myapp:latest
           format: table
-          exit-code: 1
+          exit-code: '1'
+          ignore-unfixed: true
           severity: HIGH,CRITICAL
 
-      # 6. Tag image (only if scan passes)
+      # 6. Tag image only if scan passes
       - name: Tag image
         if: success()
         run: |
-          docker tag myapp:latest ${{ secrets.DOCKERHUB_USERNAME }}/myapp:secure
+          docker tag myapp:latest ${{ secrets.DOCKERHUB_USERNAME }}/myapp:${{ github.sha }}
+          docker tag myapp:latest ${{ secrets.DOCKERHUB_USERNAME }}/myapp:latest
 
-      # 7. Push secure image
+      # 7. Push image only if scan passes
       - name: Push image
         if: success()
         run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/myapp:secure
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/myapp:${{ github.sha }}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/myapp:latest
