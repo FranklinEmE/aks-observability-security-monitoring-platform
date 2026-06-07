@@ -9,8 +9,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN pip install prometheus-client
-
 RUN chown -R appuser:appuser /app
 
 USER appuser
