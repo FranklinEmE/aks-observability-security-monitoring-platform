@@ -44,3 +44,5 @@ terraform.rc
 # planout*.zip
 *.bin
 *linux-amd64
+kubernetes/monitoring/loki-linux-amd64
+kubernetes/monitoring/logcli-linux-amd64
