@@ -5,7 +5,10 @@ WORKDIR /app
 RUN useradd -m appuser
 
 COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+
+# 🔥 FIX HERE
+RUN pip install --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
