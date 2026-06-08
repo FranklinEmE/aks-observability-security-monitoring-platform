@@ -105,9 +105,8 @@ jobs:
         run: |
           az aks get-credentials \
             --resource-group ${{ secrets.AKS_RESOURCE_GROUP }} \
-            --name ${{ secrets.AKS_CLUSTER_NAME }} \
-            --overwrite-existing
+            --name ${{ secrets.AKS_CLUSTER_NAME }}
 
           kubectl set image deployment/backend \
             backend=${{ secrets.ACR_NAME }}.azurecr.io/myapp:${{ github.sha }} \
-            -n default
+            -n production
