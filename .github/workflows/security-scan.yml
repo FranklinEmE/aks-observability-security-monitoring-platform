@@ -17,8 +17,9 @@ jobs:
       name: production
 
     steps:
+
       # ----------------------------
-      # 1. Checkout code
+      # 1. Checkout repository
       # ----------------------------
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -56,7 +57,7 @@ jobs:
           pytest -q app/backend
 
       # ----------------------------
-      # 6. Azure Login
+      # 6. Azure Login (OIDC)
       # ----------------------------
       - name: Azure login
         uses: azure/login@v2
@@ -80,10 +81,10 @@ jobs:
           docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/myapp:${{ github.sha }} app/backend
 
       # ----------------------------
-      # 9. Trivy Scan
+      # 9. Trivy Security Scan
       # ----------------------------
       - name: Run Trivy scan
-        uses: aquasecurity/trivy-action@v0.36.0
+        uses: aquasecurity/trivy-action@0.36.0
         with:
           image-ref: ${{ secrets.ACR_NAME }}.azurecr.io/myapp:${{ github.sha }}
           format: table
@@ -110,3 +111,5 @@ jobs:
           kubectl set image deployment/backend \
             backend=${{ secrets.ACR_NAME }}.azurecr.io/myapp:${{ github.sha }} \
             -n production
+
+          kubectl rollout status deployment/backend -n production
