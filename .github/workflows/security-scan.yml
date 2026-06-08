@@ -1,3 +1,4 @@
+
 name: Enterprise CI/CD Pipeline (AKS + ACR + DevSecOps)
 
 on:
@@ -17,9 +18,8 @@ jobs:
       name: production
 
     steps:
-
       # ----------------------------
-      # 1. Checkout repository
+      # 1. Checkout code
       # ----------------------------
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -41,23 +41,20 @@ jobs:
           pip install flask
           pip install -r app/backend/requirements.txt
           pip install pytest flake8
-
       # ----------------------------
       # 4. Lint code
       # ----------------------------
       - name: Lint code
         run: |
           flake8 app/backend || true
-
       # ----------------------------
       # 5. Run tests
       # ----------------------------
       - name: Run tests
         run: |
           pytest -q app/backend
-
       # ----------------------------
-      # 6. Azure Login (OIDC)
+      # 6. Azure Login
       # ----------------------------
       - name: Azure login
         uses: azure/login@v2
@@ -72,19 +69,17 @@ jobs:
       - name: Login to ACR
         run: |
           az acr login --name ${{ secrets.ACR_NAME }}
-
       # ----------------------------
       # 8. Build Docker image
       # ----------------------------
       - name: Build Docker image
         run: |
           docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/myapp:${{ github.sha }} app/backend
-
       # ----------------------------
-      # 9. Trivy Security Scan
+      # 9. Trivy Scan
       # ----------------------------
       - name: Run Trivy scan
-        uses: aquasecurity/trivy-action@0.36.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ${{ secrets.ACR_NAME }}.azurecr.io/myapp:${{ github.sha }}
           format: table
@@ -98,7 +93,6 @@ jobs:
       - name: Push image to ACR
         run: |
           docker push ${{ secrets.ACR_NAME }}.azurecr.io/myapp:${{ github.sha }}
-
       # ----------------------------
       # 11. Deploy to AKS
       # ----------------------------
@@ -107,9 +101,6 @@ jobs:
           az aks get-credentials \
             --resource-group ${{ secrets.AKS_RESOURCE_GROUP }} \
             --name ${{ secrets.AKS_CLUSTER_NAME }}
-
           kubectl set image deployment/backend \
             backend=${{ secrets.ACR_NAME }}.azurecr.io/myapp:${{ github.sha }} \
             -n production
-
-          kubectl rollout status deployment/backend -n production
