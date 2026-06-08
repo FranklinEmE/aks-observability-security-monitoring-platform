@@ -9,46 +9,31 @@ jobs:
   ci-cd:
     runs-on: ubuntu-latest
 
+    environment:
+      name: production
+
     steps:
-      # ----------------------------
-      # 1. Checkout code
-      # ----------------------------
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ----------------------------
-      # 2. Setup Python (for backend)
-      # ----------------------------
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      # ----------------------------
-      # 3. Install dependencies
-      # ----------------------------
       - name: Install dependencies
         run: |
           pip install -r app/backend/requirements.txt
           pip install pytest flake8
 
-      # ----------------------------
-      # 4. Lint code
-      # ----------------------------
       - name: Lint code
         run: |
           flake8 app/backend
 
-      # ----------------------------
-      # 5. Run unit tests
-      # ----------------------------
       - name: Run tests
         run: |
           pytest app/backend
 
-      # ----------------------------
-      # 6. Azure Login
-      # ----------------------------
       - name: Azure login
         uses: azure/login@v2
         with:
@@ -56,22 +41,13 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # ----------------------------
-      # 7. ACR Login
-      # ----------------------------
       - name: Login to ACR
         run: az acr login --name ${{ secrets.ACR_NAME }}
 
-      # ----------------------------
-      # 8. Build Docker image (ACR tag)
-      # ----------------------------
       - name: Build Docker image
         run: |
           docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/myapp:${{ github.sha }} app/backend
 
-      # ----------------------------
-      # 9. Trivy Scan (Security Gate)
-      # ----------------------------
       - name: Run Trivy scan
         uses: aquasecurity/trivy-action@v0.36.0
         with:
@@ -81,16 +57,10 @@ jobs:
           severity: HIGH,CRITICAL
           ignore-unfixed: true
 
-      # ----------------------------
-      # 10. Push image to ACR
-      # ----------------------------
       - name: Push image to ACR
         run: |
           docker push ${{ secrets.ACR_NAME }}.azurecr.io/myapp:${{ github.sha }}
 
-      # ----------------------------
-      # 11. Deploy to AKS
-      # ----------------------------
       - name: Deploy to AKS
         run: |
           az aks get-credentials \
@@ -100,9 +70,3 @@ jobs:
           kubectl set image deployment/backend \
             backend=${{ secrets.ACR_NAME }}.azurecr.io/myapp:${{ github.sha }} \
             -n default
-
-      # ----------------------------
-      # 12. Environment (production gate)
-      # ----------------------------
-      environment:
-        name: production
