@@ -1,11 +1,5 @@
 from app import app
 
-import sys
-import os
-
-# ensures CI can always find app.py
-sys.path.append(os.path.dirname(__file__))
-
 
 def test_home():
     client = app.test_client()
