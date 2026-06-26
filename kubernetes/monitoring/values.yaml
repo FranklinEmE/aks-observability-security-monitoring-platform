@@ -1,3 +1,29 @@
-USER-SUPPLIED VALUES:
 grafana:
-  adminPassword: admin123
+  adminPassword: "CHANGE_ME_OR_USE_K8S_SECRET"
+
+alertmanager:
+  config:
+    global:
+      resolve_timeout: 5m
+
+    route:
+      receiver: slack-alerts
+      group_wait: 10s
+      group_interval: 5m
+      repeat_interval: 3h
+
+    receivers:
+      - name: slack-alerts
+        slack_configs:
+          - api_url: "REPLACE_WITH_SLACK_WEBHOOK"
+            channel: "#alerts"
+            send_resolved: true
+
+      - name: email-alerts
+        email_configs:
+          - to: "REPLACE_EMAIL"
+            from: "REPLACE_EMAIL"
+            smarthost: "smtp.gmail.com:587"
+            auth_username: "REPLACE_USERNAME"
+            auth_password: "REPLACE_APP_PASSWORD"
+            require_tls: true

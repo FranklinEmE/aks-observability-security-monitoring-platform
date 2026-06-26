@@ -6,8 +6,7 @@ RUN useradd -m appuser
 
 COPY requirements.txt ./
 
-# 🔥 FIX HERE
-RUN pip install --upgrade pip setuptools wheel && \
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
     pip install --no-cache-dir -r requirements.txt
 
 COPY . .
@@ -18,4 +17,4 @@ USER appuser
 
 EXPOSE 5000
 
-CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
