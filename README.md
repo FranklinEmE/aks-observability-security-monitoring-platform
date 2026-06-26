@@ -1,13 +1,12 @@
-```markdown id="rm8k2a"
 # 🚀 AKS Observability, Security & Monitoring Platform
 
-A production-grade Kubernetes-based platform deployed on **Azure Kubernetes Service (AKS)** featuring full **CI/CD automation, observability stack, security scanning, autoscaling, ingress management, and backup strategy using Velero**.
+A production-grade Kubernetes-based platform deployed on **Azure Kubernetes Service (AKS)** featuring full CI/CD automation, observability stack, security scanning, autoscaling, ingress management, and backup strategy using Velero.
 
 ---
 
 # 📌 Project Overview
 
-This project demonstrates a complete **cloud-native DevOps platform** built with:
+This project demonstrates a complete cloud-native DevOps platform built with:
 
 - Kubernetes (AKS)
 - Terraform Infrastructure as Code
@@ -15,19 +14,17 @@ This project demonstrates a complete **cloud-native DevOps platform** built with
 - Prometheus + Grafana monitoring
 - Loki log aggregation
 - Trivy security scanning
-- Ingress controller with traffic metrics
+- NGINX Ingress Controller with traffic metrics
 - Velero backup system
 - TLS/HTTPS security policies
 - Autoscaling (HPA)
-- Network policies and RBAC
+- Network policies & RBAC
 
-The goal is to simulate a **real production-level cloud environment** used in modern DevOps/SRE teams.
+The goal is to simulate a real production-level cloud environment used in modern DevOps/SRE teams.
 
 ---
 
 # 🏗️ Architecture
-
-The system is divided into:
 
 ### 1. Infrastructure Layer
 - Azure Kubernetes Service (AKS)
@@ -40,9 +37,9 @@ The system is divided into:
 - Kubernetes deployments & services
 
 ### 3. Observability Layer
-- Prometheus (metrics collection)
-- Grafana (visualization dashboards)
-- Loki + Promtail (log aggregation)
+- Prometheus (metrics)
+- Grafana (dashboards)
+- Loki + Promtail (logs)
 
 ### 4. Security Layer
 - Trivy image scanning
@@ -57,187 +54,106 @@ The system is divided into:
 
 ---
 
-# 📸 Screenshots & Explanation
+# 📸 Screenshots & Observability
+
+## 🧱 Infrastructure
+
+### Terraform Apply
+![Terraform](screenshots/terraform-apply.png)
+
+### Cluster Environment
+![Cluster](screenshots/cluster_production_environment.png)
+
+### Cluster State
+![Cluster State](screenshots/clusterproductionstate.png)
 
 ---
 
-## 🧱 Infrastructure Setup
-
-### Terraform Apply Success
-![Terraform Apply](screenshots/terraform-apply-success.png)
-
-Shows successful provisioning of AKS cluster and required cloud infrastructure using Terraform.
-
----
-
-### Production Cluster Environment
-![Cluster Environment](screenshots/production-cluster-environment.png)
-
-Displays the deployed AKS production environment running in Azure.
-
----
-
-### Cluster State Overview
-![Cluster State](screenshots/production-cluster-state.png)
-
-Confirms all Kubernetes nodes and workloads are in a healthy running state.
-
----
-
-### Namespace Grouping
-![Namespace Grouping](screenshots/namespace-grouping.png)
-
-Logical separation of workloads into namespaces for better scalability and security.
-
----
-
-## 🖥️ Application Deployment
+## 🖥️ Application Layer
 
 ### React App Created
-![React App](screenshots/react-app-created.png)
+![React](screenshots/Create_REACTApp.png)
 
-Frontend application scaffolded and deployed into Kubernetes.
+### App Running in Browser
+![App](screenshots/app-running-browser.png)
 
----
+### Backend Observability
+![Backend](screenshots/backend-observability-dashboard.png)
 
-### Application Running in Browser
-![App Running](screenshots/application-running-browser.png)
-
-Frontend successfully accessible via Kubernetes Ingress.
-
----
-
-### Backend Service Observability
-![Backend Service](screenshots/backend-service-observability-dashboard.png)
-
-Backend service metrics showing health, response time, and request flow.
+### Pods Running
+![Pods](screenshots/all-running-pods.png)
 
 ---
 
-### All Pods Running
-![Pods Running](screenshots/all-pods-running.png)
+## 📊 Monitoring & Observability
 
-All Kubernetes pods are in a Running state with no crash loops.
+### Kubernetes Cluster Overview
+![Cluster](screenshots/kubernetes-cluster-overview.png)
 
----
+### Prometheus Targets
+![Prometheus](screenshots/prometheus_scaped.png)
 
-## 📊 Observability & Monitoring
-
-### Kubernetes Cluster Dashboard (Grafana)
-![Cluster Dashboard](screenshots/kubernetes-cluster-overview.png)
-
-Central monitoring dashboard showing CPU, memory, and node health.
-
----
-
-### Prometheus Scraping Targets
-![Prometheus](screenshots/prometheus-targets-scraped.png)
-
-Shows all Kubernetes services successfully scraped by Prometheus.
-
----
-
-### Grafana Login Dashboard
-![Grafana Login](screenshots/grafana-login-dashboard.png)
-
-Grafana authentication and dashboard entry point.
-
----
+### Grafana Login
+![Grafana](screenshots/Login_to_Grafana_dashboard.png)
 
 ### Loki Log Explorer
-![Loki Logs](screenshots/grafana-loki-log-explorer.png)
-
-Centralized log analysis using Loki and Promtail.
-
----
+![Loki](screenshots/Grafana-Log-Explorer-Loki_promtail.png)
 
 ### Loki Health Status
-![Loki Status](screenshots/loki-ready-status.png)
-
-Verifies Loki and Promtail are running and healthy.
+![Loki](screenshots/loki_healthy_runny_readyStatus.png)
 
 ---
 
-## 🌐 Ingress & Traffic Monitoring
+## 🌐 Ingress Monitoring
 
-### Ingress Request Rate
-![Request Rate](screenshots/ingress-request-rate.png)
+### Request Rate
+![Ingress](screenshots/ingress_request_rate.png)
 
-Monitors real-time HTTP request traffic entering the cluster.
+### Traffic by Namespace
+![Ingress](screenshots/Ingress_Traffic_by_Namespace.png)
 
----
+### Latency (P95)
+![Ingress](screenshots/ingress_latency_p95.png)
 
-### Ingress Traffic by Namespace
-![Traffic Namespace](screenshots/ingress-traffic-by-namespace.png)
+### Top Services
+![Ingress](screenshots/Top_Ingress_Services.png)
 
-Breakdown of traffic distribution across Kubernetes namespaces.
-
----
-
-### Ingress Latency (P95)
-![Latency](screenshots/ingress-latency-p95.png)
-
-Shows 95th percentile latency for request performance analysis.
-
----
-
-### Top Ingress Services
-![Top Services](screenshots/top-ingress-services.png)
-
-Identifies most heavily used services in the cluster.
-
----
-
-### Ingress Error Rate
-![Error Rate](screenshots/ingress-error-rate.png)
-
-Tracks HTTP error percentage for system reliability monitoring.
+### Error Rate
+![Ingress](screenshots/ingress_error_rate.png)
 
 ---
 
 ## 🔐 Security & CI/CD
 
-### CI/CD Pipeline Monitoring
-![CI/CD](screenshots/cicd-pipeline-monitoring.png)
+### CI/CD Pipeline
+![CI/CD](screenshots/CICD_Pipeline_Monitoring.png)
 
-Automated build, test, and deployment pipeline execution.
-
----
-
-### Trivy Security Scan
-![Trivy](screenshots/trivy-scan-pipeline-success.png)
-
-Container security scanning ensuring no critical vulnerabilities.
-
----
+### Trivy Scan
+![Trivy](screenshots/trivy_scan_successfullypipeline.png)
 
 ### Security Dashboard
-![Security](screenshots/security-dashboard.png)
-
-Overview of cluster security posture and compliance.
+![Security](screenshots/Security_Dashboard.png)
 
 ---
 
-## ⚙️ Infrastructure Automation
+## ⚙️ Automation
 
 ### Terraform Execution
-![Terraform](screenshots/terraform-apply-success.png)
-
-Infrastructure provisioning using Infrastructure as Code (IaC).
+![Terraform](screenshots/TerraformApply.png)
 
 ---
 
-## 📦 Backup Strategy
+# 📦 Backup Strategy
 
 - Velero configured for Kubernetes backups
-- Azure Blob Storage used as backup destination
-- Namespace-level backup support
+- Azure Blob Storage as backup target
+- Namespace-level restore capability
 
 ---
 
 # 🔧 Tools & Technologies
 
-- Azure Kubernetes Service (AKS)
+- AKS (Azure Kubernetes Service)
 - Kubernetes
 - Terraform
 - Docker
@@ -248,33 +164,31 @@ Infrastructure provisioning using Infrastructure as Code (IaC).
 - NGINX Ingress Controller
 - Trivy
 - Velero
-- GitHub Actions / CI-CD
+- GitHub Actions
 
 ---
 
 # 🚀 Key Features
 
 - Full cloud-native deployment on AKS
-- End-to-end observability stack
-- Real-time metrics & logging
+- Production-level observability stack
+- Real-time metrics + logging
 - CI/CD automation pipeline
-- Security scanning with Trivy
-- TLS + Ingress traffic control
-- Kubernetes autoscaling support
-- Disaster recovery (Velero backups)
+- Security scanning (Trivy)
+- TLS + ingress control
+- Autoscaling (HPA)
+- Disaster recovery (Velero)
 
 ---
 
 # 📈 What This Project Demonstrates
 
-This project proves:
-
-- Production-level Kubernetes skills
-- Cloud infrastructure (Azure) expertise
+- Kubernetes production readiness
+- Azure cloud engineering skills
 - DevOps CI/CD pipeline design
-- Monitoring & observability implementation
-- Security-first DevOps approach
-- Real-world SRE/Platform engineering capability
+- Observability + monitoring expertise
+- Security-first DevOps practices
+- SRE-level infrastructure thinking
 
 ---
 
@@ -282,4 +196,3 @@ This project proves:
 
 Franklin Chidera Emmanuel  
 DevOps Engineer | Cloud & Kubernetes Enthusiast
-```
